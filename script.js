@@ -141,6 +141,10 @@
       }
     }
     fill();
+    // stop the loop while it's off screen: nothing to see, no reason to spend frames on it
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (en) { win.classList.toggle('is-offscreen', !en[0].isIntersecting); }).observe(win);
+    }
     var t;
     window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(fill, 200); });
   });

@@ -181,14 +181,15 @@ h1, h2, h3 { font-weight: 400; letter-spacing: -.025em; }
 .hero__media { position: absolute; inset: 0; z-index: -1; }
 .hero__media { overflow: hidden; }
 /* taller than the panel so the scroll parallax never exposes an edge */
-.hero__media img { position: absolute; left: 0; top: -9%; width: 100%; height: 116%; object-fit: cover; object-position: 50% 42%; filter: saturate(1.04) brightness(.94); will-change: transform; }
+.hero__media img { position: absolute; left: 0; top: -9%; width: 100%; height: 116%; object-fit: cover; object-position: 50% 42%; will-change: transform; }
 .hero__media::after {
   content: ""; position: absolute; inset: 0;
   background:
     radial-gradient(ellipse 34% 58% at 53% 44%, rgba(18, 12, 8, 0) 0%, rgba(18, 12, 8, 0) 62%, rgba(18, 12, 8, .55) 82%, rgba(14, 9, 6, .92) 100%),
     radial-gradient(ellipse 60% 90% at 53% 44%, rgba(18, 12, 8, 0) 40%, rgba(12, 8, 5, .9) 75%, #0d0905 100%),
     linear-gradient(90deg, rgba(14, 9, 6, .72) 0%, rgba(14, 9, 6, .38) 26%, rgba(14, 9, 6, 0) 44%),
-    linear-gradient(0deg, rgba(14, 9, 6, .55) 0%, rgba(14, 9, 6, 0) 22%);
+    linear-gradient(0deg, rgba(14, 9, 6, .55) 0%, rgba(14, 9, 6, 0) 22%),
+    linear-gradient(rgba(0, 0, 0, .06), rgba(0, 0, 0, .06));
 }
 
 .nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 106px; }
@@ -220,12 +221,13 @@ h1, h2, h3 { font-weight: 400; letter-spacing: -.025em; }
 .mills__faces { display: flex; flex: none; }
 .mills__faces img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; object-position: 50% 18%; border: 2px solid #fff; background: var(--soft); }
 .mills__faces img + img { margin-left: -10px; }
-.marquee {
-  margin-top: 24px; overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
-}
-.marquee__track { display: flex; width: max-content; animation: marquee 42s linear infinite; }
+.marquee { position: relative; margin-top: 24px; overflow: hidden; }
+/* edge fades are static overlays: a mask-image over a moving track is re-rendered every frame */
+.marquee::before, .marquee::after { content: ""; position: absolute; z-index: 1; top: 0; bottom: 0; width: 18%; pointer-events: none; }
+.marquee::before { left: 0; background: linear-gradient(90deg, var(--bg), rgba(255, 255, 255, 0)); }
+.marquee::after { right: 0; background: linear-gradient(270deg, var(--bg), rgba(255, 255, 255, 0)); }
+.marquee__track { display: flex; width: max-content; animation: marquee 42s linear infinite; will-change: transform; }
+.marquee.is-offscreen .marquee__track { animation-play-state: paused; }
 .marquee__track li { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 0 clamp(28px, 3.4vw, 64px); color: #6b6b6b; height: 64px; }
 .mill { font-size: 28px; line-height: 1; letter-spacing: -.02em; font-weight: 500; }
 .mill--caps { text-transform: uppercase; letter-spacing: .14em; font-size: 20px; font-weight: 650; }
@@ -259,8 +261,7 @@ h1, h2, h3 { font-weight: 400; letter-spacing: -.025em; }
   position: absolute; left: 13%; right: 8%; top: 37%;
   display: grid; grid-template-columns: auto 1fr auto; gap: 4cqw 4cqw; align-items: center;
   padding: 3.4cqw; border-radius: 2.6cqw;
-  background: rgba(70, 58, 52, .62); color: #fff;
-  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  background: rgba(62, 50, 44, .84); color: #fff;
   font-size: 3.4cqw; line-height: 1.25;
 }
 .ui-confirm__pin { display: grid; place-items: center; width: 12cqw; height: 12cqw; border-radius: 1.8cqw; background: #8e6e5a; font-size: 4.6cqw; }
@@ -308,8 +309,7 @@ h1, h2, h3 { font-weight: 400; letter-spacing: -.025em; }
   position: absolute; left: 16%; right: 9%; top: 29%;
   display: flex; flex-direction: column; gap: 1.6cqw;
   padding: 2.4cqw; border-radius: 2.4cqw;
-  background: rgba(46, 34, 24, .55); color: #fff;
-  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  background: rgba(40, 29, 20, .8); color: #fff;
   font-size: 2.9cqw; line-height: 1.2;
 }
 .ui-picks__head { font-size: 2.5cqw; padding: .6cqw 1cqw 1.2cqw; color: rgba(255, 255, 255, .85); }
@@ -381,11 +381,10 @@ h1, h2, h3 { font-weight: 400; letter-spacing: -.025em; }
 .faqs { margin-top: auto; padding-top: 24px; display: flex; flex-direction: column; gap: 10px; width: min(578px, 38vw, 100%); }
 .faq {
   border-radius: var(--radius);
-  background: rgba(24, 18, 14, .52);
-  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  background: rgba(22, 16, 12, .74);
   color: #fff;
 }
-.panel--light .faq { background: rgba(40, 40, 40, .72); }
+.panel--light .faq { background: rgba(38, 38, 38, .84); }
 .faq h3 { font-size: 1rem; letter-spacing: 0; }
 .faq button {
   width: 100%; min-height: 66px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
@@ -480,8 +479,7 @@ h1, h2, h3 { font-weight: 400; letter-spacing: -.025em; }
 }
 .ui-progress {
   display: flex; flex-direction: column; gap: 10px; padding: 16px 18px; border-radius: 14px;
-  background: rgba(255, 255, 255, .86); color: var(--ink);
-  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, .96); color: var(--ink);
   box-shadow: 0 18px 40px rgba(0, 0, 0, .12); font-size: .875rem;
 }
 .ui-progress__top { display: flex; justify-content: space-between; }
@@ -745,7 +743,9 @@ h1, h2, h3 { font-weight: 400; letter-spacing: -.025em; }
 /* ---------- Motion hooks (GSAP) ---------- */
 .anim-pending .hero .reveal, .anim-pending .nav { opacity: 0; }
 .is-tweening { transition: none !important; }
-.panel { transform-origin: 50% 0; }
+/* Each sticky panel gets its own GPU layer, so the scrubbed scale-back is composited
+   instead of repainting the whole panel (photo included) on every frame. */
+.panel { transform-origin: 50% 0; will-change: transform; }
 .stage { transform-origin: 50% 50%; }
 
 /* ==========================================================================
@@ -862,7 +862,7 @@ h1, h2, h3 { font-weight: 400; letter-spacing: -.025em; }
 /* Phones, portrait tablets and very short windows: photo on top, copy below, no sticky stacking */
 @media (max-width: 799px), (max-width: 1100px) and (max-aspect-ratio: 1/1), (max-height: 699px) {
   .panels { --ph: auto; }
-  .panel { position: relative; top: auto; height: auto; min-height: 0; margin-bottom: 10px; }
+  .panel { position: relative; top: auto; height: auto; min-height: 0; margin-bottom: 10px; will-change: auto; }
   .panel__media { position: relative; height: min(64svh, 72vw, 640px); }
   .panel--dark .panel__media::after { background: linear-gradient(0deg, #1a120c 0%, rgba(26, 18, 12, 0) 34%); }
   .panel--light .panel__media::after { background: linear-gradient(0deg, #eeece8 0%, rgba(238, 236, 232, 0) 34%); }
@@ -895,7 +895,7 @@ h1, h2, h3 { font-weight: 400; letter-spacing: -.025em; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
   .marquee__track { animation: none !important; transform: none !important; width: 100%; justify-content: center; }
   .marquee__track li:nth-child(n+7) { display: none; }
-  .marquee { -webkit-mask-image: none; mask-image: none; }
+  .marquee::before, .marquee::after { display: none; }
   .announce__icon { animation: none !important; }
   .anim-pending .hero .reveal, .anim-pending .nav { opacity: 1; }
   .progress__bars button.is-active i { animation: none !important; transform: scaleX(1); }
