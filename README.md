@@ -88,7 +88,7 @@ npm run verify
 
 The page is static: upload the folder as-is (without `node_modules/`, `test-results/` or `scripts/` if you like). No path starts with `_`, so GitHub Pages needs no `.nojekyll`.
 
-Before publishing, replace the placeholder domain `https://heliae.example.com/` in the four tags at the top of [index.html](index.html): canonical, `og:url`, `og:image` and `twitter:image`. Share previews only work from a public URL.
+Live at https://heliae.vercel.app/. The four absolute URLs at the top of [index.html](index.html) (canonical, `og:url`, `og:image` and `twitter:image`) point there; update them if the site moves, because share previews need absolute public URLs.
 
 ## Files
 
